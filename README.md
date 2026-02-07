@@ -8,11 +8,9 @@ optimized room volumes in Rhino using Grasshopper and Python.
 ```
 
 **Found a bug or have suggestions?**
-
-This is an open tool - modify and improve as needed!
+- This is an open tool - modify and improve as needed!
 
 **License**
-
-Free to use and modify. Share your improvements!
+- Free to use and modify. Share your improvements!
 
 **Happy massing! 🏗️**
