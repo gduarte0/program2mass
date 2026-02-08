@@ -376,5 +376,5 @@ Don't forget to share improvements.
 ---
 
 <p align="center">
-  Made with ❤️ for architects, by architects
+  by gduarte
 </p>
