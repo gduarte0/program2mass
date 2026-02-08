@@ -8,13 +8,13 @@ Transform your architectural program spreadsheets into 3D massing models with sm
 ![Rhino](https://img.shields.io/badge/Rhino-6%2B-green)
 ![Python](https://img.shields.io/badge/Python-2.7-yellow)
 
----
+
 
 ## Overview
 
 **Program2Mass** is a Python script for Rhinoceros 3D that automatically generates architectural massing studies from CSV-based room programs. Instead of manually creating boxes for each space, simply list your rooms and their areas in a spreadsheet—the script handles the rest.
 
----
+
 
 ## Features
 
@@ -47,7 +47,7 @@ Automatically detects and applies appropriate proportions for:
 - **Organized Layers** - `ProgramMassing` (gray boxes) and `ProgramLabels` (text)
 - **Grouped Objects** - Each room's geometry and label grouped for easy manipulation
 
----
+
 
 ## Installation
 
@@ -57,7 +57,7 @@ Automatically detects and applies appropriate proportions for:
 - **Python 2.7+** (included with Rhino)
 - No additional libraries required
 
----
+
 
 ## How to use?
 
@@ -81,10 +81,9 @@ Save as `.csv` format.
 
 In Rhino:
 ```
-1. Type: EditPythonScript
-2. Click: Open
-3. Select: program2mass_v03_auto_detect.py
-4. Click: Run (green arrow or F5)
+1. Type: RunPythonScript
+2. Select: program2mass_x.x.py
+3. Run 
 ```
 
 ### 3. Select Your CSV
@@ -124,7 +123,7 @@ The script generates:
 - Text labels showing name + area
 - Everything organized and grouped
 
----
+
 
 ## How It Works
 
@@ -201,7 +200,7 @@ Bedroom:     4.50 × 5.00m (shares 5.00m with Living & Kitchen)
 
 Result: **5.00m wall appears 5 times** → Easy to connect rooms!
 
----
+
 
 ## CSV Format
 
@@ -240,7 +239,7 @@ Works as long as there are 2 columns with row 1 as headers.
 - ASCII
 - UTF-8 with BOM
 
----
+
 
 ## Room Type Detection
 
@@ -272,7 +271,7 @@ Constraints: aspect ratio 0.5-1.5
 | **Circulation** | hallway, hall, corridor, corredor, circulation, entry, foyer |
 | **Utility** | storage, closet, laundry, utility, pantry, despensa, lavanderia |
 
----
+
 
 ## Examples
 
@@ -339,7 +338,7 @@ Restroom F,6
 
 All detected correctly regardless of language!
 
----
+
 
 ## Changelog
 
@@ -365,11 +364,14 @@ All detected correctly regardless of language!
 - Layer organization
 - Automatic grouping
 
----
+
 
 ## License
 
-Feel free to modify, 
+This script is open-source, feel free to modify.
+Don't forget to share improvements.
+
+**Happy Massing!**
 
 ---
 
