@@ -10,7 +10,9 @@ Transform your room program spreadsheet into intelligent 3D massing geometry in 
 ---
 
 This tool saves you hours of mechanical work.
+
 **Use that time to design better buildings.**
+
 Don't be lazy.
 
 ---
