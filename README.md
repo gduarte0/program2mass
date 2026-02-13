@@ -3,7 +3,7 @@
 
 Transform your room program spreadsheet into intelligent 3D massing geometry in seconds.
 
-![Version](https://img.shields.io/badge/version-0.3-blue)
+![Version](https://img.shields.io/badge/version-1.0-blue)
 ![Rhino](https://img.shields.io/badge/Rhino-6%2B-green)
 ![Python](https://img.shields.io/badge/Python-2.7-yellow)
 
