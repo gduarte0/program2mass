@@ -1,4 +1,6 @@
 # Program2Mass v1.0.0
+**By gduarte**
+
 **CSV-Driven Architectural Massing Tool for Rhino**
 
 Transform your room program spreadsheet into intelligent 3D massing geometry in seconds.
