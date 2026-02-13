@@ -13,7 +13,7 @@ This tool saves you hours of mechanical work.
 
 **Use that time to design better buildings.**
 
-Don't be lazy.
+**Don't be lazy.**
 
 ---
 
