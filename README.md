@@ -1,380 +1,415 @@
-# Program2Mass
+# Program2Mass v0.5
+**CSV-Driven Architectural Massing Tool for Rhino**
 
-> **Intelligent CSV-driven architectural program massing tool for Rhino**
-
-Transform your architectural program spreadsheets into 3D massing models with smart, architecture-appropriate proportions.
+Transform your room program spreadsheet into intelligent 3D massing geometry in seconds.
 
 ![Version](https://img.shields.io/badge/version-0.3-blue)
 ![Rhino](https://img.shields.io/badge/Rhino-6%2B-green)
 ![Python](https://img.shields.io/badge/Python-2.7-yellow)
 
+---
 
+This tool saves you hours of mechanical work.
+**Use that time to design better buildings.**
+Don't be lazy.
 
-## Overview
+---
 
-**Program2Mass** is a Python script for Rhinoceros 3D that automatically generates architectural massing studies from CSV-based room programs. Instead of manually creating boxes for each space, simply list your rooms and their areas in a spreadsheet—the script handles the rest.
+## Quick Start 
 
+1. **Open Rhino** with the "Large Objects - Centimeters" template
+2. **Run** `Program2Mass.exe`
+3. **Enter** your floor-to-floor height (e.g., 300 cm)
+4. **Select** your CSV file when prompted in Rhino
+5. **Done!** Your massing is generated automatically
 
+**That's it.** No manual input in Rhino. No calculations. No tedious box-drawing.
 
-## Features
+---
 
-### Core Functionality
+## What You Need
 
-- **CSV-Driven Workflow** - Edit your program in Excel/Sheets, generate massing in Rhino
-- **Smart Proportions** - Living rooms get 4:3 ratios, kitchens get galley proportions, hallways get corridor shapes
-- **Automatic Optimization** - Algorithm maximizes shared wall dimensions across rooms
-- **Modular Grid** - All dimensions snap to 50cm increments for construction logic
-- **Minimum Dimensions** - Enforces 170cm minimum wall length (configurable)
+- **Rhino 7 or 8** (Windows)
+- **CSV file** with your room program
 
-### Room Type Intelligence
+---
 
-Automatically detects and applies appropriate proportions for:
+## CSV Format
 
-| Room Type | Preferred Ratios | Aspect Range | Example Rooms |
-|-----------|-----------------|--------------|---------------|
-| Living | 4:3, 5:4, 3:2 | 0.6 - 1.5 | Living Room, Family Room, Sala |
-| Bedroom | 3:2, 4:3, 5:4 | 0.5 - 1.5 | Master Bedroom, Bedroom 2, Quarto |
-| Kitchen | 5:3, 3:2, 4:3 | 0.5 - 2.0 | Kitchen, Kitchenette, Cozinha |
-| Bathroom | 3:2, 2:1, 5:4 | 0.4 - 2.0 | Bathroom, Powder Room, Lavabo |
-| Office | 3:2, 4:3, 5:4 | 0.6 - 1.5 | Home Office, Study, Escritorio |
-| Circulation | 2:1, 3:1, 5:2 | 0.3 - 3.0 | Hallway, Corridor, Entry |
-| Utility | 2:1, 3:2, 1:1 | 0.4 - 2.5 | Storage, Closet, Laundry |
-
-### Output
-
-- **3D Box Geometry** - Extruded to specified floor-to-floor height
-- **Text Labels** - Room name and area at the top of each box
-- **Organized Layers** - `ProgramMassing` (gray boxes) and `ProgramLabels` (text)
-- **Grouped Objects** - Each room's geometry and label grouped for easy manipulation
-
-
-
-## Installation
-
-### Prerequisites
-
-- **Rhinoceros 6 or later** (Windows or Mac)
-- **Python 2.7+** (included with Rhino)
-- No additional libraries required
-
-
-
-## How to use?
-
-### 1. Prepare Your CSV
-
-Create a simple 2-column spreadsheet:
+Any spreedsheet software works (Google Sheets, Excel, etc...)
+Your CSV should have 2 columns: Room Name and Area (in m²)
 
 ```csv
 Room Name,Area (m2)
 Living Room,35.5
 Kitchen,18.0
 Master Bedroom,22.0
-Bedroom 2,16.5
-Bathroom,8.5
-Hallway,12.0
+Bathroom 1,8.5
+Bedroom 2,16.0
 ```
 
-Save as `.csv` format.
+**That's the only input you need.**
 
-### 2. Run the Script
-
-In Rhino:
-```
-1. Type: RunPythonScript
-2. Select: program2mass_x.x.py
-3. Run 
-```
-
-### 3. Select Your CSV
-
-- File dialog opens automatically
-- Navigate to your CSV file
-- Click Open
-
-### 4. Review Detection
-
-Script shows detected room types:
-```
-Detected room types:
-  1. Living Room -> [living]
-  2. Kitchen -> [kitchen]
-  3. Master Bedroom -> [bedroom]
-  4. Bedroom 2 -> [bedroom]
-  5. Bathroom -> [bathroom]
-  6. Hallway -> [circulation]
-```
-
-### 5. Enter Floor Height
-
-```
-Enter floor-to-floor height in cm (e.g., 300): 300
-```
-
-Common heights:
-- Residential: 280-320 cm
-- Commercial Office: 350-400 cm
-- Retail: 400-500 cm
-
-### 6. Get Your Massing!
-
-The script generates:
-- 3D boxes with smart proportions
-- Text labels showing name + area
-- Everything organized and grouped
-
-
-
-## How It Works
-
-### Algorithm Overview
-
-```
-1. Read CSV File
-   └─> Parse room names and areas
-
-2. Detect Room Types
-   └─> Match keywords in names (living, bedroom, kitchen, etc.)
-
-3. Calculate Initial Dimensions
-   └─> For each room:
-       - Select appropriate proportions based on type
-       - Calculate dimensions from area
-       - Snap to 50cm grid
-       - Enforce minimum 170cm wall length
-
-4. Optimize Connections
-   └─> Analyze all rooms:
-       - Find most common wall dimensions
-       - Adjust rooms to share wall lengths (±5% area tolerance)
-       - Maintain room type constraints
-
-5. Generate Geometry
-   └─> Create in Rhino:
-       - 3D box for each room
-       - Text label at top center
-       - Group box + label
-       - Organize in layers
-```
-
-### Dimension Calculation Example
-
-**Room:** Kitchen, 18 m²  
-**Type Detected:** `kitchen` (5:3 preferred ratio)
-
-```
-1. Try 5:3 ratio:
-   - length = √(18 × 10000 × 5/3) = 547cm
-   - width = 180000 / 547 = 329cm
-
-2. Snap to 50cm grid:
-   - length = 550cm (round 547)
-   - width = 350cm (round 329)
-
-3. Check constraints:
-   - Both > 170cm minimum ✓
-   - Aspect ratio 550/350 = 1.57 (within 0.5-2.0) ✓
-
-4. Calculate actual area:
-   - 550 × 350 = 192,500 cm² = 19.25 m²
-   - Error: 1.25 m² (6.9% - acceptable)
-
-5. Final dimensions: 5.50m × 3.50m
-```
-
-### Optimization Example
-
-**Before Optimization:**
-```
-Living Room: 7.00 × 5.50m (unique walls)
-Kitchen:     5.00 × 3.50m (unique walls)
-Bedroom:     4.50 × 4.00m (unique walls)
-```
-
-**After Optimization:**
-```
-Living Room: 7.00 × 5.00m (shares 5.00m with Kitchen)
-Kitchen:     5.00 × 3.50m (shares 5.00m with Living, 3.50m with Bathroom)
-Bedroom:     4.50 × 5.00m (shares 5.00m with Living & Kitchen)
-```
-
-Result: **5.00m wall appears 5 times** → Easy to connect rooms!
-
-
-
-## CSV Format
-
-### Required Format
-
-```csv
-Room Name,Area (m2)
-Living Room,35.5
-Kitchen,18.0
-```
-
-**Rules:**
-- First row is header (required)
-- Column 1: Room Name (text)
-- Column 2: Area in square meters (number)
-- Areas must be positive numbers
-- Empty rows are automatically skipped
-
-### Supported Variations
-
-**Different Headers:**
-```csv
-Room Name,Area (m2)
-Space Name,Area (sqm)
-Room,Area
-```
-Works as long as there are 2 columns with row 1 as headers.
-
-**Different Delimiters:**
-- Comma (`,`) - recommended
-- Semicolon (`;`) - common in European Excel
-- Tab-delimited - works
-
-**Encoding:**
-- UTF-8 (recommended)
-- ASCII
-- UTF-8 with BOM
-
-
-
-## Room Type Detection
-
-### How Detection Works
-
-The script scans room names for **keywords** to determine the room type:
-
-```python
-Room Name: "Master Bedroom"
-           ↓
-Keywords found: ["bedroom", "master"]
-           ↓
-Type assigned: bedroom
-           ↓
-Proportions used: 3:2, 4:3, 5:4
-           ↓
-Constraints: aspect ratio 0.5-1.5
-```
-
-### Keyword Reference
-
-| Room Type | Keywords (case-insensitive) |
-|-----------|---------------------------|
-| **Living** | living, sala, family room, lounge, sitting |
-| **Bedroom** | bedroom, quarto, suite, dormitorio, bed, master |
-| **Kitchen** | kitchen, cozinha, cocina, kitchenette |
-| **Bathroom** | bathroom, bath, wc, toilet, lavabo, powder, restroom |
-| **Office** | office, study, escritorio, home office |
-| **Circulation** | hallway, hall, corridor, corredor, circulation, entry, foyer |
-| **Utility** | storage, closet, laundry, utility, pantry, despensa, lavanderia |
-
-
-
-## Examples
-
-### Example 1: Small Apartment (60 m²)
-
-**Input CSV:**
-```csv
-Room Name,Area (m2)
-Living/Dining,24
-Kitchen,8
-Bedroom,18
-Bathroom,5
-Storage,3
-Hallway,2
-```
-
-**Detection:**
-```
-Living/Dining -> [living]
-Kitchen -> [kitchen]
-Bedroom -> [bedroom]
-Bathroom -> [bathroom]
-Storage -> [utility]
-Hallway -> [circulation]
-```
-
-**Generated Dimensions:**
-```
-Living/Dining:  6.00 × 4.00m (4:3 ratio)
-Kitchen:        4.00 × 2.00m (galley)
-Bedroom:        4.50 × 4.00m (3:2)
-Bathroom:       2.50 × 2.00m (narrow)
-Storage:        2.00 × 1.70m (min size)
-Hallway:        3.00 × 1.00m (corridor)
-```
-
-**Wall Sharing:**
-- Living & Kitchen share 4.00m wall
-- Bedroom & Kitchen share 4.00m wall
-- Easy to connect!
-
-### Example 2: Office Suite (200 m²)
-
-**Input CSV:**
-```csv
-Room Name,Area (m2)
-Open Office,100
-Conference Room,30
-Manager Office,20
-Break Room,15
-Copy Room,8
-Main Corridor,15
-Restroom M,6
-Restroom F,6
-```
-
-**Generated Layout:**
-- All offices use consistent 3:2 proportions
-- Conference room gets balanced 5:4 ratio
-- Restrooms are efficiently narrow (2:1)
-- Corridor is properly long and narrow
-
-**Detection:**
-
-All detected correctly regardless of language!
-
-
-
-## Changelog
-
-### v0.3 (Current)
-- Automatic room type detection from names
-- Multi-language support (English, Portuguese, Spanish)
-- Simplified labels (name + area only)
-- Back to 2-column CSV format
-- Improved optimization algorithm
-
-### v0.2
-- Intelligent room proportions by type
-- Wall alignment optimization
-- 50cm grid snapping
-- Configurable constraints per room type
-- Room type-specific aspect ratios
-
-### v0.1
-- Initial release
-- Basic CSV import
-- 3D box generation
-- Text labels
-- Layer organization
-- Automatic grouping
-
-
-
-## License
-
-This script is open-source, feel free to modify.
-Don't forget to share improvements.
-
-**Happy Massing!**
+Save it as a `.csv` file and you're ready to go.
 
 ---
 
-<p align="center">
-  by gduarte
-</p>
+## 🎯 What It Does
+
+Program2Mass takes your room program and:
+
+✓ **Detects room types** automatically (living, bedroom, kitchen, bathroom, etc.)  
+✓ **Calculates optimal dimensions** using architectural proportions  
+✓ **Finds a modular grid** where all walls are multiples of a common module  
+✓ **Generates 3D volumes** in Rhino with proper heights  
+✓ **Color-codes by function** (Public/Private/Service)  
+✓ **Labels everything** with room names and areas  
+
+---
+
+## Detailed Walkthrough
+
+### Step 1: Prepare Your CSV
+
+Create a spreadsheet with your room program:
+
+| Room Name        | Area (m2) |
+|------------------|-----------|
+| Living Room      | 35.5      |
+| Kitchen          | 18.0      |
+| Master Bedroom   | 22.0      |
+| Bedroom 2        | 16.0      |
+| Bathroom 1       | 8.5       |
+| Bathroom 2       | 6.0       |
+| Storage          | 4.0       |
+
+**Tips:**
+- Use descriptive names ("Master Bedroom" not "Room 1")
+- Areas in square meters
+- No need to include circulation (hallways, corridors)
+- The script detects room types from names automatically
+
+**Save as:** `whatever.csv`
+
+---
+
+### Step 2: Open Rhino
+
+**Important:** Use the correct template!
+
+1. Launch Rhino
+2. Select: **Large Objects - Centimeters.3dm**
+3. Wait for Rhino to fully load
+
+**Why this template?**  
+Program2Mass works in centimeters. Using the correct template ensures everything aligns properly.
+
+---
+
+### Step 3: Run Program2Mass
+
+Double-click `Program2Mass.exe`
+
+You'll see:
+```
+Program2Mass v0.5
+CSV to 3D Massing | By gduarte
+
+Main Menu
+---------
+
+1. Run Program2Mass
+2. Configure Settings
+3. Quit
+
+→
+```
+
+**Select:** 1
+
+---
+
+### Step 4: Enter Floor Height
+
+The launcher will ask:
+
+```
+Step 1/4: Configuration
+  → Floor-to-floor height (cm): 300
+  ✓ Height: 300 cm
+  ✓ Saved
+```
+
+**Common heights:**
+- Residential: 280-320 cm
+- Office: 350-400 cm
+- Retail: 400-500 cm
+
+This height is **saved automatically** and applied to all rooms.
+
+---
+
+### Step 5: Script Execution
+
+The launcher will:
+
+```
+Step 2/4: Checking Rhino
+  ✓ Rhino is running
+
+Step 3/4: Locating script.py
+  ✓ Found
+
+Step 4/4: Executing
+  ✓ Command sent to Rhino
+```
+
+**In Rhino:** A file picker will appear.
+
+---
+
+### Step 6: Select Your CSV
+
+1. Browse to your CSV file
+2. Click **Open**
+3. **Done!**
+
+The script now runs completely automatically.
+
+---
+
+### Step 7: Watch It Work
+
+In Rhino's command line, you'll see:
+
+```
+Program2Mass 0.5
+Modular Grid System: All walls as common multiples
+
+Loaded 7 rooms from CSV
+
+Room type detection:
+  1. Living Room (35.5m²) -> [living]
+  2. Kitchen (18.0m²) -> [kitchen]
+  3. Master Bedroom (22.0m²) -> [bedroom]
+  ...
+
+FINDING OPTIMAL MODULAR GRID
+======================================================================
+
+Selected module: 150cm
+
+APPLYING MODULAR GRID: 150cm
+======================================================================
+  Living Room: 7.50x4.50m = 33.75m²
+  Kitchen: 6.00x3.00m = 18.00m²
+  Master Bedroom: 4.50x4.50m = 20.25m²
+  ...
+
+[AUTO] Using pre-configured floor height: 300 cm
+
+Generating geometry...
+  [OK] Living Room [public]
+  [OK] Kitchen [public]
+  [OK] Master Bedroom [private]
+  ...
+
+[DONE] Massing generated successfully!
+```
+
+---
+
+### Step 8: Review Your Massing
+
+In Rhino, you'll see:
+
+**3D Volumes:**
+- Color-coded by function
+- Labeled with names and areas
+- Arranged linearly with spacing
+- Grouped for easy manipulation
+
+**Layers created:**
+- `Program_Public` (Light Blue) - Living, Kitchen, Dining
+- `Program_Private` (Light Red) - Bedrooms, Bathrooms, Offices
+- `Program_Service` (Light Yellow) - Storage, Utility
+- `ProgramLabels` (Black) - Text labels
+
+---
+
+### Step 9: Arrange Your Layout
+
+**The volumes are placed in a line intentionally.**
+
+Now comes the design part:
+
+1. **Move rooms** to create your floor plan
+2. **All walls align** on the modular grid (e.g., 150cm)
+3. **Any room can connect** to any other room
+4. **Iterate quickly** - all dimensions are coordinated
+
+This is your **design starting point**, not the final layout.
+
+---
+
+## Understanding the Output
+
+### Modular Grid System
+
+**The Key Innovation:** All wall dimensions are multiples of a common module. Possible by the given formula:
+
+<img width="1006" height="227" alt="{282FF493-BA86-4C41-A65C-71DD04C1564E}" src="https://github.com/user-attachments/assets/c49e4133-ede6-4d9f-bf32-58989a3839d4" />
+
+**Example:**
+- Module selected: **150 cm**
+- Living Room: 7.50m × 4.50m → **(5× module) × (3× module)**
+- Kitchen: 6.00m × 3.00m → **(4× module) × (2× module)**
+- Bedroom: 4.50m × 4.50m → **(3× module) × (3× module)**
+
+**Why this matters:**
+- ✓ Universal connectivity (any room can connect)
+- ✓ Modular construction ready
+- ✓ No weird dimensions
+- ✓ Professional, buildable proportions
+
+---
+
+### Room Type Detection
+
+The script analyzes room names and assigns types:
+
+| Room Type    | Keywords                                      | Color  |
+|--------------|-----------------------------------------------|--------|
+| **Living**   | living, sala, lounge, family room, dining    | Blue   |
+| **Bedroom**  | bedroom, quarto, suite, master               | Red    |
+| **Kitchen**  | kitchen, cozinha, cocina                     | Blue   |
+| **Bathroom** | bathroom, bath, wc, lavabo, toilet           | Red    |
+| **Office**   | office, study, escritório                    | Red    |
+| **Utility**  | storage, closet, laundry, despensa           | Yellow |
+
+**Multi-language support:** Works in English, Portuguese, and Spanish.
+
+**Circulation:** Automatically skipped (hallway, corridor, circulation)
+
+---
+
+## ⚙️ Configuration Options
+
+Run `Program2Mass.exe` and select **2. Configure Settings**
+
+### Available Settings:
+
+**1. Minimum Wall Length**
+- Range: 100-300 cm
+- Default: 120 cm
+- Use: Prevents unrealistically small rooms
+
+**2. Auto-close Terminal**
+- Options: Yes / No
+- Default: Yes
+- Use: Terminal closes automatically after execution
+
+**3. Rhino Template**
+- Options:
+  - Large Objects - Centimeters (recommended)
+  - Small Objects - Centimeters
+  - Large Objects - Meters
+- Default: Large Objects - Centimeters
+
+All settings are saved to `config.json` and persist between sessions.
+
+---
+
+## Troubleshooting
+
+### "Rhino is not running!"
+
+**Solution:**
+1. Open Rhino manually
+2. Use template: "Large Objects - Centimeters"
+3. Restart Program2Mass
+
+---
+
+### "script.py not found!"
+
+**Solution:**
+Ensure `script.py` is in the same folder as `Program2Mass.exe`
+
+---
+
+### Script doesn't execute in Rhino
+
+**Solution:**
+If automation fails, manually type in Rhino command line:
+```
+_-RunPythonScript "path\to\script.py"
+```
+
+---
+
+## Technical Notes
+
+### Area Accuracy
+
+Typical variance: ±2-5% per room
+
+**Example:**
+- Requested: 22.0 m²
+- Generated: 20.25 m² (4.5m × 4.5m)
+- Variance: -7.95%
+
+The algorithm prioritizes **buildable dimensions** over exact areas.
+
+---
+
+### Performance
+
+**Typical execution:**
+- 10 rooms: ~3 seconds
+- 20 rooms: ~5 seconds
+- 50 rooms: ~10 seconds
+
+---
+
+## Language Support
+
+**Room names can be in:**
+- English
+- Portuguese
+- Spanish
+
+Mix languages freely in the same CSV.
+
+---
+
+## What This Tool Does NOT Do
+
+**Does not:**
+- ✗ Create floor plans (generates volumes only)
+- ✗ Add circulation automatically
+- ✗ Consider site boundaries
+- ✗ Place doors/windows
+- ✗ Optimize for sun/views
+- ✗ Generate multi-story automatically
+
+**This is a conceptual massing tool**, not a complete design solution.
+
+Use it to **accelerate the boring part** so you can focus on design.
+
+ Floor height was entered properly
+
+---
+
+## Credits
+
+**Program2Mass v1.0.0**  
+by gduarte
+2026
+
+**License:** 
+Open-source, feel free to modify, don't forget to share improvements.
+
+---
+
+
